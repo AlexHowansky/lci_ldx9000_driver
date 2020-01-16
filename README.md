@@ -6,6 +6,14 @@ in modern Linux versions. This repository represents a minimal update to make th
 
 # Compilation
 
+You will need a C compiler, `make`, and perhaps `flex` and `bison` installed. On Debian-based systems, this can typically be done with a command like:
+
+```sh
+apt-get install build-essential bison flex
+```
+
+To compile and install the driver:
+
 ```sh
 make
 sudo make install
