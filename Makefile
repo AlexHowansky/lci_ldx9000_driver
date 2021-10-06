@@ -1,6 +1,3 @@
-KERNELVERSION = `uname -r`
-KERNELSRC := /lib/modules/$(KERNELVERSION)/build
-
 obj-m += usblcpd.o
 
 all: usblcpd.ko testlcpd
@@ -9,15 +6,11 @@ testlcpd: testlcpd.c
 	gcc -o testlcpd testlcpd.c
 
 usblcpd.ko: usblcpd.c
-	$(MAKE) -I /usr/include -C $(KERNELSRC) SUBDIRS="$(PWD)" modules
+	$(MAKE) -C /lib/modules/$(shell uname -r)/build M="$(PWD)"
 	strip --strip-unneeded usblcpd.ko
 
 clean:
-	rm -f *.o *.ko *.mod.c .*.cmd Module.symvers modules.order testlcpd
-	rm -rf .tmp_versions
+	rm -f *.o *.ko *.mod *.mod.c .*.cmd Module.symvers modules.order testlcpd
 
-install:
-	mkdir -p /lib/modules/$(KERNELVERSION)/extra/drivers/usb/misc
-	cp -v usblcpd.ko /lib/modules/$(KERNELVERSION)/extra/drivers/usb/misc
-	depmod -a
-	modprobe usblcpd
+install: all
+	$(MAKE) -C /lib/modules/$(shell uname -r)/build M="$(PWD)" modules_install
